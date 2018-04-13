@@ -11,36 +11,38 @@ let cards = document.getElementsByClassName("card");
 let matchCount = 0; //counter for matched cards
 
 let firstClickedCard = null; //the shape of first card clicked
+let currentClickedCard = null; //holds the current clicked card
 
-function clickCard(event){
-  console.log(event.target.className);
-  if(event.target.className==='card'){
-    if (firstClickedCard===null){
-      console.log("card: "+event.target.className);
-      firstClickedCard = event.target;
-      console.log("child: "+event.target.childNodes[1].className);
-      event.target.className='card open show';
-      console.log("card: "+event.target.className);
-    }else {
-      if(firstClickedCard.childNodes[1].className===event.target.childNodes[1].className){ //matched
-        event.target.className='card match';
-        firstClickedCard.className='card match';
-        firstClickedCard = null; //reset
-      }else{
-        event.target.className='card open show';
-        console.log("other card: "+event.target.className);
-        setTimeout(function setClass(){
-          firstClickedCard.className='card';
-          event.target.className='card';
+
+$(".card").click(
+  function clickCard(){
+    currentClickedCard=this;
+    console.log(currentClickedCard.className);
+    if(currentClickedCard.className==='card'){
+      if (firstClickedCard===null){
+        console.log("card: "+currentClickedCard.className);
+        firstClickedCard = currentClickedCard;
+        console.log("child: "+currentClickedCard.childNodes[1].className);
+        currentClickedCard.className='card open show';
+        console.log("card: "+currentClickedCard.className);
+      }else {
+        if(firstClickedCard.childNodes[1].className===currentClickedCard.childNodes[1].className){ //matched
+          currentClickedCard.className='card match';
+          firstClickedCard.className='card match';
           firstClickedCard = null; //reset
-        } ,1000);
+        }else{
+          currentClickedCard.className='card open show';
+          console.log("other card: "+currentClickedCard.className);
+          setTimeout(function setClass(){
+            firstClickedCard.className='card';
+            currentClickedCard.className='card';
+            console.log("other card2: "+currentClickedCard.className+" child "+currentClickedCard.childNodes[1].className);
+            firstClickedCard = null; //reset
+          } ,1000);
+        }
       }
     }
-  }
-}
-
-
-
+  });
 
 /*
  * Display the cards on the page
@@ -63,8 +65,6 @@ function shuffle(array) {
 
     return array;
 }
-
-deck.addEventListener('click', clickCard);
 
 /*
  * set up the event listener for a card. If a card is clicked:
