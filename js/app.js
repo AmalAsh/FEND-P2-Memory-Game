@@ -13,6 +13,15 @@ let matchCount = 0; //counter for matched cards
 let firstClickedCard = null; //the shape of first card clicked
 let currentClickedCard = null; //holds the current clicked card
 
+$(document).ready(startGame); //----------add a "start button"
+
+function startGame(){ 
+  cards = shuffle(cards);
+  $(".card").addClass("open show");
+  setTimeout(function(){
+    $(".card").removeClass("open show");
+  },3000);
+}
 
 $(".card").click(
   function clickCard(){
@@ -20,11 +29,8 @@ $(".card").click(
     console.log(currentClickedCard.className);
     if(currentClickedCard.className==='card'){
       if (firstClickedCard===null){
-        console.log("card: "+currentClickedCard.className);
         firstClickedCard = currentClickedCard;
-        console.log("child: "+currentClickedCard.childNodes[1].className);
         currentClickedCard.className='card open show';
-        console.log("card: "+currentClickedCard.className);
       }else {
         if(firstClickedCard.childNodes[1].className===currentClickedCard.childNodes[1].className){ //matched
           currentClickedCard.className='card match';
@@ -32,11 +38,9 @@ $(".card").click(
           firstClickedCard = null; //reset
         }else{
           currentClickedCard.className='card open show';
-          console.log("other card: "+currentClickedCard.className);
-          setTimeout(function setClass(){
+            setTimeout(function setClass(){
             firstClickedCard.className='card';
             currentClickedCard.className='card';
-            console.log("other card2: "+currentClickedCard.className+" child "+currentClickedCard.childNodes[1].className);
             firstClickedCard = null; //reset
           } ,1000);
         }
