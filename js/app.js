@@ -1,10 +1,6 @@
 /*
- * Create a list that holds all of your cards
- */
-
-// let it all be open at first them turn it to card and start playing
-
-
+variables declarations
+*/
 $deck = $("#deck");
 let shapeList = ["fa fa-diamond", "fa fa-paper-plane-o",
   "fa fa-anchor", "fa fa-bolt",
@@ -16,17 +12,34 @@ let shapeList = ["fa fa-diamond", "fa fa-paper-plane-o",
   "fa fa-bicycle", "fa fa-bomb"
 ];
 
-//let cards = document.getElementsByClassName("card");
-
-let matchCount = 0; //counter for matched cards
-
-let fragment = document.createDocumentFragment();
-
-let firstClickedCard = null; //the shape of first card clicked
+let firstClickedCard = null; //holds the first  card clicked
 
 let currentClickedCard = null; //holds the current clicked card
 
-$(document).ready(startGame); //----------add a "start button"
+let matchedCounter = 0; //counter for matched cards
+let movesCounter = 0;
+let starsCount = 0;
+let starsList = ['<i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>',
+ '<i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>',
+ '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i>',
+ '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>'];
+
+
+/*
+strart and restart
+*/
+
+$(document).ready(function(){
+  swal({
+    text:"Match the cards with the same shape",
+    confirmButtonText: "START",
+    confirmButtonColor: '#8cd0e8'
+  }).then((result) => {
+    if (result.value) {
+      startGame();
+    }
+  });
+}); //----------add a "start button"
 
 function startGame() {
   shapeList = shuffle(shapeList);
@@ -35,47 +48,32 @@ function startGame() {
     cardsList.push($("<li></li>").addClass("card").append($("<i></i>").addClass(shapeList[i]))); //create cards with their children and add  classes
   }
   $deck.append(cardsList);
+  $(".moves").text(matchedCounter);
 
+  $(".stars").append(starsList[starsCount]);
+
+  swal({
+    title:"Pay Attention!",
+    showConfirmButton: false,
+    timer: 1000,
+  });
   $(".card").addClass("open show");
   setTimeout(function() {
     $(".card").removeClass("open show");
-  }, 3000);
+  }, 5000);
 }
 
-$("#deck").click(function(e) {
-  if (e.target.classList.contains("card")) {
-    console.log("in");
-    currentClickedCard = e.target; //??
-    console.log(currentClickedCard);
-    console.log(currentClickedCard.className);
-    if (currentClickedCard.className === 'card') {
-      if (firstClickedCard === null) {
-        firstClickedCard = currentClickedCard;
-        currentClickedCard.className = 'card open show';
-      } else {
-        if (firstClickedCard.childNodes[0].className === currentClickedCard.childNodes[0].className) { //matched
-          currentClickedCard.className = 'card match';
-          firstClickedCard.className = 'card match';
-          firstClickedCard = null; //reset
-        } else {
-          currentClickedCard.className = 'card open show';
-          setTimeout(function setClass() {
-            firstClickedCard.className = 'card';
-            currentClickedCard.className = 'card';
-            firstClickedCard = null; //reset
-          }, 1000);
-        }
-      }
-    }
-  }
-});
+$(".restart").click(restartGame);
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+function restartGame(){
+  matchedPairsCount=0; //reset matches counter
+  matchedCounter=0; //reset moves counter
+  starsCount = 0;
+  $(".stars").empty();
+  $deck.empty();
+
+  startGame();
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -92,6 +90,68 @@ function shuffle(array) {
 
   return array;
 }
+
+$(".restart").click(restartGame);
+
+/*
+game play
+*/
+
+$("#deck").click(function(e) {
+  if (e.target.classList.contains("card")) {
+    $(".moves").text(++movesCounter);
+    console.log("in");
+    currentClickedCard = e.target;
+    console.log(currentClickedCard);
+    console.log(currentClickedCard.className);
+    if (currentClickedCard.className === 'card') {
+      if (firstClickedCard === null) { //checking if a card is already clicked/open
+        firstClickedCard = currentClickedCard;
+        currentClickedCard.className = 'card open show';
+      } else { //checking if a card is already clicked/open
+        if (firstClickedCard.childNodes[0].className === currentClickedCard.childNodes[0].className) { //matched
+          currentClickedCard.className = 'card match';
+          firstClickedCard.className = 'card match';
+          firstClickedCard = null; //reset clicked cards
+          matchedCounter++;
+
+          if (movesCounter/2<matchedCounter*(movesCounter*0.5)*(matchedCounter/movesCounter)){
+            if(starsCount<3){
+              starsCount++;
+              $(".stars").empty();
+              $(".stars").append(starsList[starsCount]);
+            }
+          }
+
+          if(matchedCounter===8){
+            swal({
+              title: 'Congrats!',
+              html: '<div style="font-size:40px; color:#c9d14d;">'+starsList[starsCount]+'</div><p>You finished the game in '+movesCounter+' moves',
+              confirmButtonColor: '#8cd0e8',
+              confirmButtonText: 'New Game'
+            }).then((result) => {
+              if (result.value) {
+                restartGame();
+              }
+            });
+          }
+        } else { //not matched
+          firstClickedCard.className = 'card wrong show'
+          currentClickedCard.className = 'card wrong show';
+
+          setTimeout(function setClass() {
+            firstClickedCard.className = 'card';
+            currentClickedCard.className = 'card';
+            firstClickedCard = null; //reset clicked cards
+          }, 500);
+        }
+      }
+    }
+  }
+});
+
+
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
