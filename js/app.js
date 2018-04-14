@@ -4,19 +4,39 @@
 
  // let it all be open at first them turn it to card and start playing
 
-const deck = document.getElementById("deck");
 
-let cards = document.getElementsByClassName("card");
+$deck = $("#deck");
+let shapeList = ["fa fa-diamond","fa fa-paper-plane-o",
+                      "fa fa-anchor","fa fa-bolt",
+                      "fa fa-cube","fa fa-leaf",
+                      "fa fa-bicycle","fa fa-bomb",
+                      "fa fa-diamond","fa fa-paper-plane-o",
+                      "fa fa-anchor","fa fa-bolt",
+                      "fa fa-cube","fa fa-leaf",
+                      "fa fa-bicycle","fa fa-bomb"];
+
+//let cards = document.getElementsByClassName("card");
 
 let matchCount = 0; //counter for matched cards
 
+let fragment = document.createDocumentFragment();
+
 let firstClickedCard = null; //the shape of first card clicked
+
 let currentClickedCard = null; //holds the current clicked card
 
 $(document).ready(startGame); //----------add a "start button"
 
-function startGame(){ 
-  cards = shuffle(cards);
+function startGame(){
+  console.log(shapeList);
+  shapeList = shuffle(shapeList);
+  console.log(shapeList);
+  let cardsList = [];
+  for(let i=0; i<16; i++){
+    cardsList.push($("<li></li>").addClass("card").append($("<i></i>").addClass(shapeList[i])));
+  }
+  $deck.append(cardsList);
+
   $(".card").addClass("open show");
   setTimeout(function(){
     $(".card").removeClass("open show");
@@ -25,7 +45,7 @@ function startGame(){
 
 $(".card").click(
   function clickCard(){
-    currentClickedCard=this;
+    currentClickedCard= $(this);//??
     console.log(currentClickedCard.className);
     if(currentClickedCard.className==='card'){
       if (firstClickedCard===null){
