@@ -2,18 +2,19 @@
  * Create a list that holds all of your cards
  */
 
- // let it all be open at first them turn it to card and start playing
+// let it all be open at first them turn it to card and start playing
 
 
 $deck = $("#deck");
-let shapeList = ["fa fa-diamond","fa fa-paper-plane-o",
-                      "fa fa-anchor","fa fa-bolt",
-                      "fa fa-cube","fa fa-leaf",
-                      "fa fa-bicycle","fa fa-bomb",
-                      "fa fa-diamond","fa fa-paper-plane-o",
-                      "fa fa-anchor","fa fa-bolt",
-                      "fa fa-cube","fa fa-leaf",
-                      "fa fa-bicycle","fa fa-bomb"];
+let shapeList = ["fa fa-diamond", "fa fa-paper-plane-o",
+  "fa fa-anchor", "fa fa-bolt",
+  "fa fa-cube", "fa fa-leaf",
+  "fa fa-bicycle", "fa fa-bomb",
+  "fa fa-diamond", "fa fa-paper-plane-o",
+  "fa fa-anchor", "fa fa-bolt",
+  "fa fa-cube", "fa fa-leaf",
+  "fa fa-bicycle", "fa fa-bomb"
+];
 
 //let cards = document.getElementsByClassName("card");
 
@@ -27,46 +28,47 @@ let currentClickedCard = null; //holds the current clicked card
 
 $(document).ready(startGame); //----------add a "start button"
 
-function startGame(){
-  console.log(shapeList);
+function startGame() {
   shapeList = shuffle(shapeList);
-  console.log(shapeList);
   let cardsList = [];
-  for(let i=0; i<16; i++){
-    cardsList.push($("<li></li>").addClass("card").append($("<i></i>").addClass(shapeList[i])));
+  for (let i = 0; i < 16; i++) {
+    cardsList.push($("<li></li>").addClass("card").append($("<i></i>").addClass(shapeList[i]))); //create cards with their children and add  classes
   }
   $deck.append(cardsList);
 
   $(".card").addClass("open show");
-  setTimeout(function(){
+  setTimeout(function() {
     $(".card").removeClass("open show");
-  },3000);
+  }, 3000);
 }
 
-$(".card").click(
-  function clickCard(){
-    currentClickedCard= $(this);//??
+$("#deck").click(function(e) {
+  if (e.target.classList.contains("card")) {
+    console.log("in");
+    currentClickedCard = e.target; //??
+    console.log(currentClickedCard);
     console.log(currentClickedCard.className);
-    if(currentClickedCard.className==='card'){
-      if (firstClickedCard===null){
+    if (currentClickedCard.className === 'card') {
+      if (firstClickedCard === null) {
         firstClickedCard = currentClickedCard;
-        currentClickedCard.className='card open show';
-      }else {
-        if(firstClickedCard.childNodes[1].className===currentClickedCard.childNodes[1].className){ //matched
-          currentClickedCard.className='card match';
-          firstClickedCard.className='card match';
+        currentClickedCard.className = 'card open show';
+      } else {
+        if (firstClickedCard.childNodes[0].className === currentClickedCard.childNodes[0].className) { //matched
+          currentClickedCard.className = 'card match';
+          firstClickedCard.className = 'card match';
           firstClickedCard = null; //reset
-        }else{
-          currentClickedCard.className='card open show';
-            setTimeout(function setClass(){
-            firstClickedCard.className='card';
-            currentClickedCard.className='card';
+        } else {
+          currentClickedCard.className = 'card open show';
+          setTimeout(function setClass() {
+            firstClickedCard.className = 'card';
+            currentClickedCard.className = 'card';
             firstClickedCard = null; //reset
-          } ,1000);
+          }, 1000);
         }
       }
     }
-  });
+  }
+});
 
 /*
  * Display the cards on the page
@@ -77,17 +79,18 @@ $(".card").click(
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+  var currentIndex = array.length,
+    temporaryValue, randomIndex;
 
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
 
-    return array;
+  return array;
 }
 
 /*
