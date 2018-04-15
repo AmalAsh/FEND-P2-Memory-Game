@@ -2,19 +2,35 @@
 
 ## Table of Contents
 
-* [Instructions](#instructions)
+* [Introduction](#Introduction)
+* [Features](#Features)
+* [Game Play](#Game Play)
 * [Contributing](#contributing)
 
-## Instructions
+## Introduction
+This is a Memory Game developed as a project for Udacity's Front-End Web Developer Nanodegree.
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+## Features
+- Animated interactions with the game elements
+- Shuffled cards for each game
+- Start and finish alerts
+- Count of player moves
+- Stars based on the number of cards matched for the moves taken
+- Count-up timer
+- Option to restart the game
 
-To get started, open `js/app.js` and start building out the app's functionality
+##Game Play
+###Steps
+1. Start the game by clicking "START"
+2. Pay attention to the locations of the cards, you'll have 4 minutes to remember them
+3. Match each card with the other card that holds the same shape, click the card to flip it
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+###Winning Criteria
+You will win the game when you match all the cards.
+
 
 ## Contributing
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+This game was developed by Amal Alshihri using the starter code by Udacity for FEND students. Udacity most likely will not accept pull requests.
 
 For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
