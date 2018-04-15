@@ -4,7 +4,7 @@
 
 * [Introduction](#Introduction)
 * [Features](#Features)
-* [Game Play](#Game Play)
+* [Play](#Play)
 * [Contributing](#contributing)
 
 ## Introduction
@@ -19,7 +19,7 @@ This is a Memory Game developed as a project for Udacity's Front-End Web Develop
 - Count-up timer
 - Option to restart the game
 
-## Game Play
+## Play
 ### Steps
 1. Start the game by clicking "START"
 2. Pay attention to the locations of the cards, you'll have 4 minutes to remember them
