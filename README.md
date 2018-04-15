@@ -19,13 +19,13 @@ This is a Memory Game developed as a project for Udacity's Front-End Web Develop
 - Count-up timer
 - Option to restart the game
 
-##Game Play
-###Steps
+## Game Play
+### Steps
 1. Start the game by clicking "START"
 2. Pay attention to the locations of the cards, you'll have 4 minutes to remember them
 3. Match each card with the other card that holds the same shape, click the card to flip it
 
-###Winning Criteria
+### Winning Criteria
 You will win the game when you match all the cards.
 
 
