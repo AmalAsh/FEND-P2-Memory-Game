@@ -28,8 +28,9 @@ body {
 
 h1 {
   font-family: 'Coda', cursive;
-  font-weight: 500;
-  font-size: 45px;
+  font-weight: 600;
+  font-size: 35px;
+  color: #6db7d9;
 }
 
 /*

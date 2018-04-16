@@ -19,6 +19,7 @@ let currentClickedCard = null; //holds the current clicked card
 let matchedCounter = 0;
 let movesCounter = 0;
 let starsCount = 0;
+let gamePoints = 0; //to set the stars based on points
 
 let starsList = ['<i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>',
  '<i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>',
@@ -64,18 +65,19 @@ function startGame() {
   });
 
   $(".card").addClass("open show"); // flip cards up
+  $(".restart").hide();
 
   setTimeout(function() {
-    totalSec = 0;
-    timer = setInterval(gameTimer, 1000); //start timer
     swal({
       title:"START!",
       showConfirmButton: false,
       timer: 300,
     });
     $(".card").removeClass("open show"); // flip cards down
+    $(".restart").show();
+    totalSec = 0;
+    timer = setInterval(gameTimer, 1000); //start timer
   }, 5000);
-
 }
 
 
@@ -100,6 +102,8 @@ function restartGame(){
   movesCounter=0;
   matchedCounter=0;
   starsCount = 0;
+  firstClickedCard = null;
+  currentClickedCard = null;
   $(".stars").empty();
 
   $deck.empty();
@@ -125,57 +129,52 @@ game play
 */
 
 $("#deck").click(function(e) {
-  if (e.target.classList.contains("card")) {
+  currentClickedCard = e.target;
+  if (currentClickedCard.className === 'card') {
     $(".moves").text(++movesCounter+" Moves ");
+    currentClickedCard.className = 'card open show';
 
-    console.log("in");
-    currentClickedCard = e.target;
-    console.log(currentClickedCard);
-    console.log(currentClickedCard.className);
-    if (currentClickedCard.className === 'card') {
-      currentClickedCard.className = 'card open show';
-      if (firstClickedCard === null) { //checking if a card is already clicked/open
-        firstClickedCard = currentClickedCard;
-      } else { //checking if a card is already clicked/open
-        if (firstClickedCard.childNodes[0].className === currentClickedCard.childNodes[0].className) { //matched
-          $(".open").effect("bounce", {times:1, distance:10}, 200 );
-          currentClickedCard.className = 'card match';
-          firstClickedCard.className = 'card match';
-          firstClickedCard = null; //reset clicked cards
-          matchedCounter++;
+    if (firstClickedCard === null) { //checking if a card is already clicked/open
+      firstClickedCard = currentClickedCard;
+    } else { //checking if a card is already clicked/open
 
-          if (movesCounter/2<matchedCounter*(movesCounter*0.5)*(matchedCounter/movesCounter)){
-            if(starsCount<3){
-              starsCount++;
-              $(".stars").empty();
-              $(".stars").append(starsList[starsCount]);
+      starsCount=Math.floor(matchedCounter*2.5/(movesCounter+5)*5);
+      if(starsCount<4){
+        console.log("in");
+        $(".stars").empty();
+        $(".stars").append(starsList[starsCount]);
+      }
+
+      if (firstClickedCard.childNodes[0].className === currentClickedCard.childNodes[0].className) { //matched
+        $(".open").effect("bounce", {times:1, distance:10}, 200 );
+        currentClickedCard.className = 'card match';
+        firstClickedCard.className = 'card match';
+        firstClickedCard = null; //reset clicked cards
+        matchedCounter++;
+
+        if(matchedCounter===8){ //player won
+          clearInterval(timer);
+          swal({
+            title: 'Congrats!',
+            html: '<div style="font-size:40px; color:#c9d14d;">'+starsList[starsCount]+'</div><p>You finished the game in '+movesCounter+' moves <br> and '+totalSec+' seconds',
+            confirmButtonColor: '#8cd0e8',
+            confirmButtonText: 'New Game'
+          }).then((result) => {
+            if (result.value) {
+              restartGame();
             }
-          }
-
-          if(matchedCounter===8){ //player won
-            clearInterval(timer);
-            swal({
-              title: 'Congrats!',
-              html: '<div style="font-size:40px; color:#c9d14d;">'+starsList[starsCount]+'</div><p>You finished the game in '+movesCounter+' moves',
-              confirmButtonColor: '#8cd0e8',
-              confirmButtonText: 'New Game'
-            }).then((result) => {
-              if (result.value) {
-                restartGame();
-              }
-            });
-          }
-        } else { //not matched
-          firstClickedCard.className = 'card wrong show'
-          currentClickedCard.className = 'card wrong show';
-          $(".wrong").effect("shake", {times:2, distance:10}, 200);
-          //currentClickedCard.effect( "shake" );
-          setTimeout(function setClass() {
-            firstClickedCard.className = 'card';
-            currentClickedCard.className = 'card';
-            firstClickedCard = null; //reset clicked cards
-          }, 500);
+          });
         }
+      } else { //not matched
+        firstClickedCard.className = 'card wrong show'
+        currentClickedCard.className = 'card wrong show';
+        $(".wrong").effect("shake", {times:2, distance:10}, 200);
+        //currentClickedCard.effect( "shake" );
+        setTimeout(function setClass() {
+          firstClickedCard.className = 'card';
+          currentClickedCard.className = 'card';
+          firstClickedCard = null; //reset clicked cards
+        }, 200);
       }
     }
   }
